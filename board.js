@@ -87,12 +87,10 @@ class Board {
     requestAnimationFrame(this.animate.bind(this))
   }
 
-
-
-freeze() {
-  this.piece.shape.forEach((row, y) => {
-    row.forEach((value, x) => {
-      if (value > 0) {
+  freeze() {
+    this.piece.shape.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value > 0) {
           this.grid[y + this.piece.y][x + this.piece.x] = value;
         }
       });
@@ -100,6 +98,7 @@ freeze() {
   }
 
   drawBoard() {
+    console.log(this.grid)
     this.grid.forEach((row, y) => {
       row.forEach((value,x) => {
         if(value >0) {

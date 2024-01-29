@@ -13,7 +13,9 @@ let accountValues ={
   score: 0, lines: 0, level: 0
 }
 
+
 function play() {
+  // play 버튼을 누르면 트리거
   board.reset();
 
   if (requestId) {
