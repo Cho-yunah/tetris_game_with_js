@@ -63,6 +63,9 @@ function pause () {
 
 document.addEventListener('keydown', event => {
   if(moves[event.keyCode]) {
+    if (event.keyCode === KEY.ESC) {
+      gameOver();
+    } 
     event.preventDefault();
 
     let p = moves[event.keyCode](board.piece);
@@ -90,11 +93,13 @@ document.addEventListener('keydown', event => {
 function animate(now=0) {
   time.elapsed = now - time.start;
   
-  if(time.elapsed > time.level) {
+  if (time.elapsed > time.level) {
     time.start = now;
-    board.drop();
+    if (!board.drop()) {
+      gameOver();
+      return;
+    }
   }
-
   // 새로운 상태로 그리기 전에 보드를 지운다.
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
   
@@ -117,6 +122,7 @@ let account = new Proxy(accountValues, {
   }
 })
 
+
 function gameOver() {
   cancelAnimationFrame(requestId);
 
@@ -125,6 +131,11 @@ function gameOver() {
   ctx.font = '1px Arial';
   ctx.fillStyle = 'red';
   ctx.fillText('GAME OVER', 1.8, 4);
+  
+  checkHighScore(account.score);
+
+  document.querySelector('#pause-btn').style.display = 'none';
+  document.querySelector('#play-btn').style.display = '';
 }
 
 function resetGame() {
