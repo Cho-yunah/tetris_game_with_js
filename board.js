@@ -79,7 +79,7 @@ class Board {
 
   draw() {
     this.piece.draw();
-    this.drawBoard();
+    this.drawBoard(); // 바닥에 닿았을 경우 지워지지 않고 유지되어 쌓임
   }
 
   animate() {
@@ -98,7 +98,6 @@ class Board {
   }
 
   drawBoard() {
-    console.log(this.grid)
     this.grid.forEach((row, y) => {
       row.forEach((value,x) => {
         if(value >0) {
