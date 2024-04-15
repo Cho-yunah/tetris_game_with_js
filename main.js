@@ -8,22 +8,10 @@ let board = new Board(ctx, ctxNext);
 
 let time = null;
 let requestId = null;
-
 let accountValues ={
   score: 0, lines: 0, level: 0
 }
-
-
-function play() {
-  // play 버튼을 누르면 트리거
-  board.reset();
-
-  if (requestId) {
-    cancelAnimationFrame(requestId);
-  };
-  
-  animate();
-}
+time = {start: 0, elapsed: 0, level: 800}
 
 const moves = {
   [KEY.LEFT]:  p => ({ ...p, x: p.x - 1 }),
@@ -33,14 +21,45 @@ const moves = {
   [KEY.UP] : p => board.rotate(p)
 };
 
-initNext();
-function initNext () {
+function initNext () { // 다음 생성될 블록 미리보기
   ctxNext.canvas.width= 4*BLOCK_SIZE;
   ctxNext.canvas.height = 4* BLOCK_SIZE;
   ctxNext.scale(BLOCK_SIZE, BLOCK_SIZE)
 }
+initNext();
 
-// const p = this.moves[event](this.piece);
+function play() {
+  // play 버튼을 누르면 트리거
+  if (document.querySelector('#play-btn').style.display == '') {
+    resetGame();
+  }
+
+  if (requestId) {
+    cancelAnimationFrame(requestId);
+  };
+  animate();
+  document.querySelector('#play-btn').style.display = 'none';
+  document.querySelector('#pause-btn').style.display = 'block';
+}
+function pause () {
+  if (!requestId) {
+    document.querySelector('#play-btn').style.display = 'none';
+    document.querySelector('#pause-btn').style.display = 'block';
+    animate();
+    return;
+  }
+  cancelAnimationFrame(requestId);
+  requestId = null;
+
+  ctx.fillStyle = 'black';
+  ctx.fillRect(1, 3, 8, 1.2);
+  ctx.font = '1px Arial';
+  ctx.fillStyle = 'yellow';
+  ctx.fillText('PAUSED', 3, 4);
+
+  document.querySelector('#play-btn').style.display = 'block';
+  document.querySelector('#pause-btn').style.display = 'none';
+}
 
 document.addEventListener('keydown', event => {
   if(moves[event.keyCode]) {
@@ -67,7 +86,6 @@ document.addEventListener('keydown', event => {
   }
 })
 
-time = {start: 0, elapsed: 0, level: 800}
 
 function animate(now=0) {
   time.elapsed = now - time.start;
